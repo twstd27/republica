@@ -1,42 +1,138 @@
 ---
-import Logo from "../components/Logo.astro";
-import Button from "../components/Button.astro";
-import HeaderLink from "../components/HeaderLink.astro";
+import { Icon } from "astro-icon/components";
+import ThemeSwitcher from "~/components/theme-switcher.astro";
+import type { NavItem } from "~/types";
 
-import MenuIcon from "../components/icons/Menu.astro";
-import CloseIcon from "../components/icons/Close.astro";
+const navItems: Array<NavItem> = [
+  { title: "Servicios", url: "#servicios" },
+  { title: "Sucursales", url: "#sucursales" },
+  { title: "Contactanos", url: "#contactanos" },
+];
 ---
 
-<header id="header-nav" class="fixed top-0 w-full px-6 py-4 z-50">
-  <div class="max-w-7xl mx-auto flex items-center justify-between gap-16">
-    <HeaderLink
-      checkActive={false}
-      href="/"
-      class="relative z-10"
-      aria-label="logo"
-    >
-      <Logo
-        class="absolute w-10 m-auto blur-sm opacity-0 transition-opacity duration-300 hover:opacity-100"
-      />
-      <Logo class="w-10" />
-    </HeaderLink>
-    <nav
-      id="header-menu"
-      class="fixed w-full h-dvh inset-0 bg-[#151a36]/90 text-2xl flex flex-col items-center justify-center gap-8 -translate-y-full transition-transform duration-300 target:translate-y-0 md:static md:h-[initial] md:bg-[initial] md:text-xl md:flex-row md:translate-y-[initial]"
-    >
-      <HeaderLink class="text__glowing" href="/vota">SERVICIOS</HeaderLink>
-      <HeaderLink class="text__glowing" href="/info">SUCURSALES</HeaderLink>
-      <HeaderLink class="text__glowing" href="/archivo">CONTACTOS</HeaderLink>
-      <Button
-        class="md:py-2 md:ml-auto md:text-base lg:text-base"
-        url="https://drive.google.com/file/d/1D7IvIqMyqAoG58fuk8bc0JvhAmrWBbOK/view"
+<header
+  id="page-header"
+  class="absolute bottom-0 z-20 flex w-full items-center justify-between border-b border-transparent px-8 py-4 text-white"
+>
+  <a class="flex items-center gap-3 hover:!text-default" href="#">
+    <h1 class="sr-only">Astro</h1>
+    <Icon name="logomark" class="size-10" />
+    <Icon name="wordmark" class="hidden h-4 sm:block" />
+  </a>
+  <div>
+    <div class="flex items-center gap-6">
+      <nav class="hidden sm:block">
+        <ul class="flex items-center gap-6">
+          {
+            navItems.map(({ title, url }) => (
+              <li>
+                <a class="text-sm" href={url}>
+                  {title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <button
+        id="open-nav-button"
+        type="button"
+        class="btn sm:hidden"
+        aria-label="Navigation"
       >
-        BOTON
-      </Button>
-      <a href="#header-nav" class="md:hidden absolute top-6 right-6">
-        <CloseIcon />
-      </a>
-    </nav>
-    <a href="#header-menu" class="md:hidden"><MenuIcon /></a>
+        <Icon name="mdi:menu" class="size-8" />
+      </button>
+      <ThemeSwitcher />
+    </div>
+    <div id="menu-modal" class="modal hidden" aria-hidden="true">
+      <div class="fixed inset-0 bg-default px-8 py-4 text-default">
+        <div class="space-y-4" role="dialog" aria-modal="true">
+          <header class="text-right">
+            <button
+              id="close-nav-button"
+              type="button"
+              class="btn"
+              aria-label="Close navigation"
+            >
+              <Icon name="mdi:close" class="size-8" />
+            </button>
+          </header>
+          <div class="flex justify-center">
+            <Icon name="logomark" class="size-16" />
+          </div>
+          <nav>
+            <ul class="flex flex-col">
+              {
+                navItems.map(({ title, url }) => (
+                  <li>
+                    <a class="block py-4 text-center text-xl" href={url}>
+                      {title}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
+
+<script>
+  import MicroModal from "micromodal";
+  import invariant from "tiny-invariant";
+
+  const menuModalId = "menu-modal";
+
+  const header = document.querySelector("#page-header") as HTMLElement;
+  const page = document.documentElement;
+  const menu = document.querySelector(`#${menuModalId} ul`);
+  const openNavButton = document.querySelector("#open-nav-button");
+  const closeNavButton = document.querySelector("#close-nav-button");
+
+  invariant(header, "header should not be null");
+  invariant(menu, "menu should not be null");
+  invariant(openNavButton, "openNavButton should not be null");
+  invariant(closeNavButton, "closeNavButton should not be null");
+
+  const openMenu = () => {
+    MicroModal.show(menuModalId, { disableScroll: true });
+  };
+
+  const closeMenu = () => {
+    MicroModal.close(menuModalId);
+  };
+
+  openNavButton.addEventListener("click", openMenu);
+  closeNavButton.addEventListener("click", closeMenu);
+
+  document.addEventListener("scroll", () => {
+    const d = page.clientHeight - page.scrollTop - header.offsetHeight;
+    header.classList.toggle("fixed-header", d < 0);
+  });
+
+  menu.addEventListener("click", (event) => {
+    if ((event.target as HTMLElement).tagName === "A") {
+      closeMenu();
+    }
+  });
+</script>
+
+<noscript>
+  <style>
+    #open-nav-button {
+      display: none;
+    }
+  </style>
+</noscript>
+
+<style>
+  .fixed-header {
+    @apply fixed bottom-auto top-0;
+    @apply border-default bg-default text-default;
+  }
+  .modal.is-open {
+    @apply block;
+  }
+</style>
