@@ -2,7 +2,7 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     // Alias `src` to `~`
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "~/*": ["src/*"]
     }
