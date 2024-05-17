@@ -4,9 +4,10 @@ import ThemeSwitcher from "~/components/theme-switcher.astro";
 import type { NavItem } from "~/types";
 
 const navItems: Array<NavItem> = [
-  { title: "Servicios", url: "#servicios" },
-  { title: "Sucursales", url: "#sucursales" },
-  { title: "Contactanos", url: "#contactanos" },
+  { title: "Servicios", url: "#servicios", type: "Secondary" },
+  { title: "Sucursales", url: "#sucursales", type: "Secondary" },
+  { title: "Contactanos", url: "#contactanos", type: "Secondary" },
+  { title: "Ingresar", url: "/signin", type: "Primary" },
 ];
 ---
 
@@ -16,17 +17,16 @@ const navItems: Array<NavItem> = [
 >
   <a class="flex items-center gap-3 hover:!text-default" href="#">
     <h1 class="sr-only">Astro</h1>
-    <Icon name="logomark" class="size-10" />
-    <Icon name="wordmark" class="hidden h-4 sm:block" />
+    <Icon name="logoRcolor" class="size-16" />
   </a>
   <div>
     <div class="flex items-center gap-6">
       <nav class="hidden sm:block">
         <ul class="flex items-center gap-6">
           {
-            navItems.map(({ title, url }) => (
+            navItems.map(({ title, url, type }) => (
               <li>
-                <a class="text-sm" href={url}>
+                <a class={`text-sm hover:underline ${(type === 'Primary') ? "bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 rounded-sm py-2 px-8 hover:text-white" : ""}`} href={url}>
                   {title}
                 </a>
               </li>
@@ -58,14 +58,14 @@ const navItems: Array<NavItem> = [
             </button>
           </header>
           <div class="flex justify-center">
-            <Icon name="logomark" class="size-16" />
+            <Icon name="logoRcolor" class="size-32" />
           </div>
           <nav>
             <ul class="flex flex-col">
               {
-                navItems.map(({ title, url }) => (
+                navItems.map(({ title, url, type }) => (
                   <li>
-                    <a class="block py-4 text-center text-xl" href={url}>
+                    <a class={`block py-4 text-center text-xl ${(type === 'Primary') ? "bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500 rounded-sm" : ""}`} href={url}>
                       {title}
                     </a>
                   </li>

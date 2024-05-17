@@ -19,4 +19,5 @@ export interface FooterLink {
 export interface NavItem {
   title: string;
   url: string;
+  type: "Primary" | "Secondary"; 
 }
