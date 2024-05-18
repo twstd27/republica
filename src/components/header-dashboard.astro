@@ -1,19 +1,25 @@
 ---
 import { Icon } from "astro-icon/components";
-import ThemeSwitcher from "~/components/theme-switcher.astro";
 import type { NavItem } from "~/types";
 
 const navItems: Array<NavItem> = [
-  { title: "Servicios", url: "#servicios", type: "Secondary" },
-  { title: "Sucursales", url: "#sucursales", type: "Secondary" },
-  { title: "Contactanos", url: "#contactanos", type: "Secondary" },
-  { title: "Ingresar", url: "/signin", type: "Primary" },
+  { title: "Volver", url: "/", type: "Secondary" },
+  // { title: "Registrarse", url: "/registro", type: "Primary" },
 ];
+
+const { url } = Astro.request;
+const auxUrl = url.split('/');
+const page = auxUrl[auxUrl.length - 1]
+
+navItems.push({
+  title: (page === 'signin') ? "Registrarse" : "Ingresar", url: (page === 'signin') ? "/registro" : "/signin", type: "Primary",
+})
+
 ---
 
 <header
   id="page-header"
-  class="absolute bottom-0 z-20 flex w-full items-center justify-between border-b border-transparent px-8 py-4 text-white"
+  class="fixed top-0 z-20 flex w-full items-center justify-between border-b px-8 py-4 text-white fixed-header border-default bg-default text-default"
 >
   <a class="flex items-center gap-3 hover:!text-default" href="#">
     <h1 class="sr-only">La República</h1>
@@ -42,7 +48,6 @@ const navItems: Array<NavItem> = [
       >
         <Icon name="mdi:menu" class="size-8" />
       </button>
-      <ThemeSwitcher />
     </div>
     <div id="menu-modal" class="modal hidden" aria-hidden="true">
       <div class="fixed inset-0 bg-default px-8 py-4 text-default">
@@ -84,14 +89,10 @@ const navItems: Array<NavItem> = [
   import invariant from "tiny-invariant";
 
   const menuModalId = "menu-modal";
-
-  const header = document.querySelector("#page-header") as HTMLElement;
-  const page = document.documentElement;
   const menu = document.querySelector(`#${menuModalId} ul`);
   const openNavButton = document.querySelector("#open-nav-button");
   const closeNavButton = document.querySelector("#close-nav-button");
 
-  invariant(header, "header should not be null");
   invariant(menu, "menu should not be null");
   invariant(openNavButton, "openNavButton should not be null");
   invariant(closeNavButton, "closeNavButton should not be null");
@@ -106,11 +107,6 @@ const navItems: Array<NavItem> = [
 
   openNavButton.addEventListener("click", openMenu);
   closeNavButton.addEventListener("click", closeMenu);
-
-  document.addEventListener("scroll", () => {
-    const d = page.clientHeight - page.scrollTop - header.offsetHeight;
-    header.classList.toggle("fixed-header", d < 0);
-  });
 
   menu.addEventListener("click", (event) => {
     if ((event.target as HTMLElement).tagName === "A") {
@@ -128,10 +124,6 @@ const navItems: Array<NavItem> = [
 </noscript>
 
 <style>
-  .fixed-header {
-    @apply fixed bottom-auto top-0;
-    @apply border-default bg-default text-default;
-  }
   .modal.is-open {
     @apply block;
   }

@@ -1,43 +1,21 @@
 ---
 import Base from "../layout/base.astro";
-const title = "Ingresar";
+const title = "Ingresar | La República E-Sports Center";
+
+const { cookies, redirect } = Astro;
+
+const accessToken = cookies.get("sb-access-token");
+const refreshToken = cookies.get("sb-refresh-token");
+
+if (accessToken && refreshToken) {
+  return redirect("/dashboard");
+}
 ---
 
 <Base title={title}>
   <main class="flex-1 flex flex-col gap-4 items-center p-4 justify-center">
     <section class="w-full max-w-md">
-      <h3 class="mb-3 text-4xl font-extrabold text-center">{title}</h3>
-      <form
-        action="/api/auth/signin"
-        method="post"
-        class="grid grid-cols-1 gap-3 w-full"
-      >
-        <div class="grid grid-cols-1 gap-2">
-          <label
-            for="email"
-            class="font-medium dark:text-zinc-300 text-zinc-900 text-sm"
-            >Correo Electronico</label
-          >
-          <input id="email" type="email" name="email" placeholder="mail@loopple.com" class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none dark:bg-[#272f3c] mb-7 placeholder:text-grey-700 rounded-md"/>
-        </div>
-        <label
-          for="password"
-          class="font-medium dark:text-zinc-300 text-zinc-900 text-sm"
-          >Contrasena</label
-        >
-        <input id="password" type="password" name="password" placeholder="mail@loopple.com" class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none dark:bg-[#272f3c] mb-7 placeholder:text-grey-700 rounded-md"/>
-        <button type="submit" class="w-full px-6 py-5 mb-5 text-sm font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500">Ingresar</button>
-        
-        <!-- <button
-          type="submit"
-          class="dark:bg-zinc-100 bg-zinc-900 border-zinc-900 py-1.5 border dark:border-zinc-100 rounded-md mt-2 dark:text-zinc-900 text-zinc-100 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed"
-          >Ingresar</button
-        > -->
-      </form>
-      <hr class="h-0 border-t mt-8 dark:border-zinc-600 border-zinc-300" />
-      <p class="-mt-2.5 text-xs text-center dark:text-zinc-400 text-zinc-500">
-        <span class="dark:bg-zinc-900 bg-zinc-50 px-4">O ingresa con</span>
-      </p>
+      <h3 class="mb-3 text-4xl font-extrabold text-center">Ingresar</h3>
       <form
         action="/api/auth/signin"
         method="post"
@@ -75,9 +53,34 @@ const title = "Ingresar";
            Ingresar con Google
         </button>
       </form>
+      <hr class="h-0 border-t mt-8 dark:border-zinc-600 border-zinc-300" />
+      <p class="-mt-2.5 text-xs text-center dark:text-zinc-400 text-zinc-500">
+        <span class="dark:bg-zinc-900 bg-zinc-50 px-4">O ingresa con</span>
+      </p>
+      <form
+        action="/api/auth/signin"
+        method="post"
+        class="grid grid-cols-1 gap-3 w-full"
+      >
+        <div class="grid grid-cols-1 gap-2">
+          <label
+            for="email"
+            class="font-medium dark:text-zinc-300 text-zinc-900 text-sm"
+            >Correo Electrónico</label
+          >
+          <input id="email" type="email" name="email" class="flex items-center w-full px-5 py-4 text-sm font-medium outline-none dark:bg-[#272f3c] placeholder:text-grey-700 rounded-md"/>
+        </div>
+        <label
+          for="password"
+          class="font-medium dark:text-zinc-300 text-zinc-900 text-sm"
+          >Contraseña</label
+        >
+        <input id="password" type="password" name="password" class="flex items-center w-full px-5 py-4 text-sm font-medium outline-none dark:bg-[#272f3c] mb-2 placeholder:text-grey-700 rounded-md"/>
+        <button type="submit" class="w-full px-6 py-5 mb-5 text-sm font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-pink-500">Ingresar</button>
+      </form>
       <p class="text-zinc-500 dark:text-zinc-400 text-sm mb-8 w-full">
         no tienes cuenta? <a
-          href="/register"
+          href="/registro"
           class="dark:text-blue-400 text-blue-600 underline underline-offset-2 font-medium"
           >registrarse</a
         >
